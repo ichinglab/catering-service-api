@@ -8,33 +8,6 @@ const prisma = new PrismaClient();
  * @route /api/v1/product
  * @access public
  */
-// export const productCreate = async (req, res) => {
-//   const { product_name, base_price, total_price, quantity, product_photo } =
-//     req.body;
-
-//   try {
-//     const product = await prisma.product.create({
-//       data: {
-//         product_name,
-//         base_price,
-//         total_price,
-//         quantity,
-//         product_photo,
-//       },
-//     });
-
-//     res
-//       .status(201)
-//       .json({ product, status: true, message: 'Product create successfull' });
-//   } catch (error) {
-//     res.status(400).json({
-//       status: false,
-//       message: 'product creating failed',
-//       error: error.message,
-//     });
-//   }
-// };
-
 export const productCreate = async (req, res) => {
   const {
     product_name,
@@ -42,7 +15,7 @@ export const productCreate = async (req, res) => {
     total_price,
     quantity,
     product_photo,
-    categoryIds, // array of category IDs
+    categoryIds,
   } = req.body;
 
   try {

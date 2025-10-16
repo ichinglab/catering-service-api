@@ -16,9 +16,9 @@ const prisma = new PrismaClient();
  */
 
 export const userRegister = asyncHandler(async (req, res) => {
-  const { name, auth, password } = req.body;
+  const { first_name, last_name, auth, address, password } = req.body;
 
-  if (!name || !auth || !password) {
+  if (!first_name || !auth || !password) {
     return res.status(400).json({ message: 'all fields are required' });
   }
 
@@ -53,9 +53,11 @@ export const userRegister = asyncHandler(async (req, res) => {
 
   const user = await prisma.user.create({
     data: {
-      name,
+      first_name,
+      last_name,
       email: authEmail,
       phone: authPhone,
+      address,
       password: hashPassword,
     },
   });

@@ -5,11 +5,12 @@ import {
   getAllCategory,
   updateCategory,
 } from '../controler/categoryControler.js';
+import tokenVeryfiy from '../middleware/tokenVerify.js';
 
 const router = express.Router();
 
-router.post('/api/v1/category', createCategory);
-router.get('/api/v1/category', getAllCategory);
+router.post('/api/v1/category', tokenVeryfiy, createCategory);
+router.get('/api/v1/category', tokenVeryfiy, getAllCategory);
 router.delete('/api/v1/category/:id', deleteCategory);
 router.put('/api/v1/category/:id', updateCategory);
 

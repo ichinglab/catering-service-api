@@ -2,28 +2,30 @@ import { PrismaClient } from '@prisma/client';
 import asyncHandler from 'express-async-handler';
 import { fileUploadToCloud } from '../utils/cloudinary.js';
 const prisma = new PrismaClient();
+
 /**
  *
- * @description Get all student
+ * @description Get all user
  * @method GET
- * @route api/v1/student
+ * @route api/v1/user
  * @access public
  */
+
 export const getAllUser = asyncHandler(async (req, res) => {
   const data = await prisma.user.findMany({
     orderBy: { updatedAt: 'desc' },
   });
   res.status(200).json({
     users: data,
-    message: 'All student get successful',
+    message: 'All user get successful',
   });
 });
 
 /**
  *
- * @description Single Student
+ * @description Single user
  * @method GET
- * @route api/v1/student
+ * @route api/v1/user
  * @access public
  */
 
@@ -33,14 +35,14 @@ export const getSingleUser = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json({ singleData, status: true, message: 'get single student' });
+    .json({ singleData, status: true, message: 'get single user' });
 });
 
 /**
  *
- * @description Delete Student
+ * @description Delete user
  * @method DELETE
- * @route api/v1/student
+ * @route api/v1/user
  * @access public
  */
 export const deleteUser = asyncHandler(async (req, res) => {
@@ -56,15 +58,15 @@ export const deleteUser = asyncHandler(async (req, res) => {
 
 /**
  *
- * @description Update student
+ * @description Update user
  * @method PEATCH
- * @route api/v1/student
+ * @route api/v1/user
  * @access public
  */
 
 export const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, email, phone, dob, gender, role } = req.body;
+  const { first_name, last_name, phone, dob, gender, address, role } = req.body;
 
   if (!name || !phone) {
     return res.status(400).json({ message: 'name, phone  are requried!' });
@@ -79,13 +81,14 @@ export const updateUser = asyncHandler(async (req, res) => {
   const updatedUser = await prisma.user.update({
     where: { id: id },
     data: {
-      name,
-      email,
+      first_name,
+      last_name,
       phone,
-      image: fileData,
       dob,
       gender,
+      address,
       role,
+      photo: fileData,
     },
   });
 
