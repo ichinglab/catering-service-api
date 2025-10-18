@@ -1,0 +1,14 @@
+{
+  "sku": "SKU-PROD-1001",
+  "title": "Wireless Bluetooth Headphones",
+  "description": "High-quality over-ear headphones with noise cancellation and long battery life.",
+  "base_price": 3500,
+  "total_price": 3150,
+  "discount": 10,
+  "quantity": 50,
+  "address": "Dhaka, Bangladesh",
+  "duration": "6 months warranty",
+  "timeSlots": ["Morning", "Afternoon", "Night"],
+  "product_photo": "https://example.com/images/headphones.jpg",
+  "categoryIds": ["4affb049-17eb-4181-b680-fb0007807e6e"]
+}

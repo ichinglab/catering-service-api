@@ -8,24 +8,36 @@ const prisma = new PrismaClient();
  * @route /api/v1/product
  * @access public
  */
-export const productCreate = async (req, res) => {
+export const createProduct = async (req, res) => {
   const {
-    product_name,
+    sku,
+    title,
+    description,
     base_price,
     total_price,
+    discount,
     quantity,
+    address,
+    duration,
     product_photo,
+    timeSlots,
     categoryIds,
   } = req.body;
 
   try {
     const product = await prisma.product.create({
       data: {
-        product_name,
+        sku,
+        title,
+        description,
         base_price,
         total_price,
+        discount,
         quantity,
+        address,
+        duration,
         product_photo,
+        timeSlots,
         categories: {
           create: categoryIds.map(categoryId => ({
             category: { connect: { id: categoryId } },
@@ -49,6 +61,54 @@ export const productCreate = async (req, res) => {
   }
 };
 
+// export const createProduct = async (req, res) => {
+//   const {
+//     title,
+//     description,
+//     price,
+//     discount,
+//     sku,
+//     photo,
+//     address,
+//     duration,
+//     timeSlots,
+//     categoryIds,
+//   } = req.body;
+
+//   // Calculate total price
+//   const total_price = price - (price * discount) / 100;
+
+//   const product = await prisma.product.create({
+//     data: {
+//       sku,
+//       title,
+//       description,
+//       base_price: price,
+//       discount,
+//       total_price,
+//       product_photo: photo,
+//       address,
+//       duration,
+//       timeSlots,
+//       categories: {
+//         create: categoryIds.map(categoryId => ({
+//           category: { connect: { id: categoryId } },
+//         })),
+//       },
+//     },
+//     include: {
+//       categories: { include: { category: true } },
+//     },
+//   });
+
+//   res.status(201).json({
+//     success: true,
+//     message: 'Product created successfully',
+//     data: product,
+//   });
+// };
+
+export default createProduct;
 /**
  * @description   get all Products
  * @method GET
@@ -86,6 +146,7 @@ export const getAllProducts = async (req, res) => {
  * @route /api/v1/product
  * @access public
  */
+
 export const getSingleProduct = async (req, res) => {
   const { id } = req.params;
   try {
@@ -151,38 +212,51 @@ export const deleteProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
   const {
-    product_name,
+    sku,
+    title,
+    description,
     base_price,
     total_price,
+    discount,
     quantity,
+    address,
+    duration,
     product_photo,
-    categoryIds, // ✅ You must include this
+    timeSlots,
+    categoryIds,
   } = req.body;
 
   try {
+    // Build update data object with only provided fields
+    const updateData = {};
+
+    if (sku !== undefined) updateData.sku = sku;
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (base_price !== undefined) updateData.base_price = base_price;
+    if (total_price !== undefined) updateData.total_price = total_price;
+    if (discount !== undefined) updateData.discount = discount;
+    if (quantity !== undefined) updateData.quantity = quantity;
+    if (address !== undefined) updateData.address = address;
+    if (duration !== undefined) updateData.duration = duration;
+    if (product_photo !== undefined) updateData.product_photo = product_photo;
+    if (timeSlots !== undefined) updateData.timeSlots = timeSlots;
+
+    // Handle category updates: delete old ones and create new ones
+    if (categoryIds !== undefined) {
+      updateData.categories = {
+        deleteMany: {}, // Remove all existing category associations
+        create: categoryIds.map(categoryId => ({
+          category: { connect: { id: categoryId } },
+        })),
+      };
+    }
+
     const product = await prisma.product.update({
       where: { id },
-      data: {
-        product_name,
-        base_price,
-        total_price,
-        quantity,
-        product_photo,
-
-        // ✅ If categoryIds is provided, update relations
-        ...(categoryIds && {
-          categories: {
-            deleteMany: {}, // Remove old category relations
-            create: categoryIds.map(categoryId => ({
-              category: { connect: { id: categoryId } },
-            })),
-          },
-        }),
-      },
+      data: updateData,
       include: {
-        categories: {
-          include: { category: true },
-        },
+        categories: { include: { category: true } },
       },
     });
 

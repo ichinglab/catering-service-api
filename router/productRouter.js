@@ -3,14 +3,14 @@ import {
   deleteProduct,
   getAllProducts,
   getSingleProduct,
-  productCreate,
   updateProduct,
+  createProduct,
 } from '../controler/productControler.js';
 
 //init router
 const router = express.Router();
 //all student routers
-router.post('/api/v1/product', productCreate);
+router.post('/api/v1/product', createProduct);
 router.get('/api/v1/product', getAllProducts);
 router.get('/api/v1/product/:id', getSingleProduct);
 router.delete('/api/v1/product/:id', deleteProduct);

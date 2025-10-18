@@ -1,0 +1,11 @@
+address: 'dfghjk';
+category: '9c260176-1c26-4252-a093-7a67a1492b45';
+description: 'ghjkl; ghjkl ';
+discount: 2;
+duration: '30 days';
+photo: "hjkl;'";
+price: 200;
+quantity: '200';
+sku: 'SKU-13365';
+timeSlots: (3)[('morning', 'afternoon', 'night')];
+title: 'apple watch';

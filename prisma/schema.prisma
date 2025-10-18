@@ -49,10 +49,15 @@ model Category {
 model Product {
   id            String   @id @default(uuid())
   sku           String?  @unique
-  product_name  String?  @default("")
+  title         String?  @default("")
+  description   String?
   base_price    Int?
   total_price   Int?
+  discount      Int?
   quantity      Int?
+  address       String?
+  duration      String?
+  timeSlots     String[]
   product_photo String?  @default("")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -62,7 +67,7 @@ model Product {
   categories categoryProduct[]
 
   @@index([base_price])
-  @@index([product_name])
+  @@index([title])
   @@index([sku])
   @@map("products")
 }
