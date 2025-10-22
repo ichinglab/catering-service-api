@@ -230,9 +230,15 @@ export const loingUser = asyncHandler(async (req, res) => {
     {
       id: loginUser.id,
       first_name: loginUser.first_name,
+      last_name: loginUser.last_name,
       phone: loginUser.phone,
       email: loginUser.email,
+      image: loginUser.image,
+      dob: loginUser.dob,
+      gender: loginUser.gender,
+      address: loginUser.address,
       role: loginUser.role,
+      createdAt: loginUser.createdAt,
     },
     process.env.USER_LOGIN_SECRET,
     { expiresIn: '7d' }
@@ -283,4 +289,39 @@ export const loggedinUser = asyncHandler(async (req, res) => {
   res
     .status(200)
     .json({ auth: req.me, status: true, message: 'Loggedin user found' });
+});
+
+/**
+ * @description  Update User
+ * @route /api/v1/user/:id
+ * @method patch
+ * @access private
+ */
+export const updateUser = asyncHandler(async (req, res) => {
+  const { id, first_name, last_name, phone, dob, gender, address } = req.body;
+
+  if (!first_name) {
+    return res.status(400).json({ message: 'first name are requried!' });
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: { id: id },
+    data: {
+      first_name,
+      last_name,
+      phone,
+      dob,
+      gender,
+      address,
+    },
+  });
+  if (!updatedUser) {
+    return res.status(400).json({ message: 'User not found' });
+  }
+
+  res.status(200).json({
+    message: 'Update successful',
+    status: true,
+    user: updatedUser,
+  });
 });

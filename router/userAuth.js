@@ -4,6 +4,7 @@ import {
   loggedinUser,
   logOut,
   loingUser,
+  updateUser,
   userRegister,
 } from '../controler/userAuth.js';
 import tokenVeryfiy from '../middleware/tokenVerify.js';
@@ -16,6 +17,7 @@ router.get('/api/v1/register', getUser);
 router.post('/api/v1/login', loingUser);
 router.post('/api/v1/logout', logOut);
 router.get('/api/v1/loggedin', tokenVeryfiy, loggedinUser);
+router.patch('/api/v1/profile-upate', updateUser);
 
 //export default
 export default router;
