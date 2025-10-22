@@ -12,6 +12,6 @@ const router = express.Router();
 router.post('/api/v1/category', tokenVeryfiy, createCategory);
 router.get('/api/v1/category', getAllCategory);
 router.delete('/api/v1/category/:id', tokenVeryfiy, deleteCategory);
-router.put('/api/v1/category/:id', tokenVeryfiy, updateCategory);
+router.patch('/api/v1/category/:id', tokenVeryfiy, updateCategory);
 
 export default router;
