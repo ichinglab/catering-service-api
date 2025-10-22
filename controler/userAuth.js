@@ -156,6 +156,52 @@ export const getUser = asyncHandler(async (req, res) => {
  * @access public
  */
 
+// export const loingUser = asyncHandler(async (req, res) => {
+//   const { auth, password } = req.body;
+
+//   // input validation
+//   if (!auth || !password) {
+//     return res
+//       .status(400)
+//       .json({ status: true, message: 'All fields are required' });
+//   }
+
+//   // try to find user
+//   let loginUser = null;
+//   if (isEmail(auth)) {
+//     loginUser = await prisma.user.findFirst({ where: { email: auth } });
+//   } else if (isMobile(auth)) {
+//     loginUser = await prisma.user.findFirst({ where: { phone: auth } });
+//   }
+
+//   // if no user or wrong password → always unauthorized
+//   if (!loginUser || !bcrypt.compareSync(password, loginUser.password)) {
+//     return res.status(401).json({ message: 'Unauthorized' });
+//   }
+
+//   // create login token
+//   const accessToken = jwt.sign({ auth: auth }, process.env.USER_LOGIN_SECRET, {
+//     expiresIn: '7d',
+//   });
+
+//   // set cookie
+//   res.cookie('accessToken', accessToken, {
+//     httpOnly: true,
+//     secure: process.env.APP_ENV === 'Development' ? false : true,
+//     sameSite: 'strict',
+//     path: '/',
+//     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+//   });
+
+//   // success response
+//   res.status(200).json({
+//     loginUser,
+//     status: true,
+//     accessToken,
+//     message: 'Login successful',
+//   });
+// });
+
 export const loingUser = asyncHandler(async (req, res) => {
   const { auth, password } = req.body;
 
@@ -163,7 +209,7 @@ export const loingUser = asyncHandler(async (req, res) => {
   if (!auth || !password) {
     return res
       .status(400)
-      .json({ status: true, message: 'All fields are required' });
+      .json({ status: false, message: 'All fields are required' });
   }
 
   // try to find user
@@ -174,15 +220,23 @@ export const loingUser = asyncHandler(async (req, res) => {
     loginUser = await prisma.user.findFirst({ where: { phone: auth } });
   }
 
-  // if no user or wrong password → always unauthorized
+  // if no user or wrong password → unauthorized
   if (!loginUser || !bcrypt.compareSync(password, loginUser.password)) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  // create login token
-  const accessToken = jwt.sign({ auth: auth }, process.env.USER_LOGIN_SECRET, {
-    expiresIn: '7d',
-  });
+  // ✅ create login token with user details
+  const accessToken = jwt.sign(
+    {
+      id: loginUser.id,
+      first_name: loginUser.first_name,
+      phone: loginUser.phone,
+      email: loginUser.email,
+      role: loginUser.role,
+    },
+    process.env.USER_LOGIN_SECRET,
+    { expiresIn: '7d' }
+  );
 
   // set cookie
   res.cookie('accessToken', accessToken, {
@@ -195,10 +249,10 @@ export const loingUser = asyncHandler(async (req, res) => {
 
   // success response
   res.status(200).json({
-    loginUser,
     status: true,
-    accessToken,
     message: 'Login successful',
+    loginUser,
+    accessToken,
   });
 });
 
