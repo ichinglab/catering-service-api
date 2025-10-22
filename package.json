@@ -1,5 +1,5 @@
 {
-  "name": "ready-pack",
+  "name": "catering-service-api",
   "version": "1.0.0",
   "description": "",
   "main": "server/server.js",
@@ -11,7 +11,7 @@
     "start": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
-  "author": "",
+  "author": "Iching Software Lab",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.16.2",
