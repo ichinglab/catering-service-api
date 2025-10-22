@@ -57,14 +57,17 @@ model Product {
   quantity      Int?
   address       String?
   duration      String?
+  package_title String?
+  food_items    String[]
   timeSlots     String[]
+  sold_count    Int?     @default(0)
   product_photo String?  @default("")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  orders Order[] @relation("OrderProducts")
-
+  //relations
   categories categoryProduct[]
+  orderItems OrderProduct[]
 
   @@index([base_price])
   @@index([title])
@@ -87,20 +90,36 @@ model categoryProduct {
 }
 
 model Order {
-  id           String       @id @default(uuid())
-  userId       String
-  order_date   DateTime?    @default(now())
-  order_status Order_status @default(PENDING)
-  quantity     Int?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-
-  // many-to-many relation with products
-  products Product[] @relation("OrderProducts")
+  id             String         @id @default(uuid())
+  userId         String
+  order_date     DateTime?      @default(now())
+  order_status   Order_status   @default(PENDING)
+  payment_status payment_status @default(UNPAID)
+  payment_method payment_method @default(CASH_ON_DELIVERY)
+  subtotal       Int?
+  shipping_fee   Int?           @default(0)
+  total_amount   Int?
+  notes          String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  user           User           @relation(fields: [userId], references: [id])
+  orderItems     OrderProduct[]
 
   @@map("orders")
+}
+
+model OrderProduct {
+  id        String @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int    @default(1)
+  price     Int // store price at order time
+  subtotal  Int // price * quantity
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_products")
 }
 
 model Service {
@@ -129,4 +148,14 @@ enum Order_status {
   PROCESSING
   SUCCESS
   REJECT
+}
+
+enum payment_status {
+  UNPAID
+  PAID
+}
+
+enum payment_method {
+  CASH_ON_DELIVERY
+  ONLINE
 }

@@ -1,12 +1,8 @@
-import asyncHandler from 'express-async-handler';
-import { isEmail, isMobile } from '../helper/Helper.js';
-
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
-
-//prisma inti
-const prisma = new PrismaClient();
+import prisma from '../config/prismaClient.js';
+import { isEmail, isMobile } from '../helper/Helper.js';
 
 /**
  * @description  student Register

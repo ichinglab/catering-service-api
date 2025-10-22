@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
 import asyncHandler from 'express-async-handler';
+import prisma from '../config/prismaClient.js';
 import { fileUploadToCloud } from '../utils/cloudinary.js';
-const prisma = new PrismaClient();
 
 /**
  *

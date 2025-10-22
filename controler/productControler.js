@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-//prisma inti
-const prisma = new PrismaClient();
+import prisma from '../config/prismaClient.js';
 
 /**
  * @description  Ceteate Product
@@ -21,8 +19,12 @@ export const createProduct = async (req, res) => {
     duration,
     product_photo,
     timeSlots,
+    package_title,
+    food_items,
     categoryIds,
   } = req.body;
+
+  const totalPrice = base_price - (base_price * discount) / 100;
 
   try {
     const product = await prisma.product.create({
@@ -31,13 +33,15 @@ export const createProduct = async (req, res) => {
         title,
         description,
         base_price,
-        total_price,
+        total_price: totalPrice,
         discount,
         quantity,
         address,
         duration,
         product_photo,
         timeSlots,
+        package_title,
+        food_items,
         categories: {
           create: categoryIds.map(categoryId => ({
             category: { connect: { id: categoryId } },
