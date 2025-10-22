@@ -11,9 +11,9 @@ import tokenVeryfiy from '../middleware/tokenVerify.js';
 const router = express.Router();
 
 router.post('/api/v1/order', tokenVeryfiy, createOrder);
-router.get('/api/v1/order', tokenVeryfiy, getAllOrders);
+router.get('/api/v1/order', getAllOrders);
 router.delete('/api/v1/order/:id', tokenVeryfiy, deleteOrder);
 router.patch('/api/v1/order/:id', tokenVeryfiy, updateOrder);
-router.get('/api/v1/order/:id', tokenVeryfiy, getOrderById);
+router.get('/api/v1/order/:id', getOrderById);
 
 export default router;
