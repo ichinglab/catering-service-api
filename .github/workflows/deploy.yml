@@ -1,0 +1,79 @@
+name: CS API CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate .env
+        run: |
+          envsubst "`printf '${%s} ' $(sh -c "env|cut -d'=' -f1")`" < ./.env.example > ./.env
+        env:
+          APP_ENV: production
+          PORT: 3007
+          DATABASE_URL: postgresql://${{secrets.POSTGRES_PROD_USER}}:${{secrets.POSTGRES_PROD_PASS}}@postgres:5432/production-catering_service_db
+
+          #SMTP
+          SMTP_HOST: smtp-relay.brevo.com
+          SMTP_PORT: 2525
+          SMTP_SECURE: false
+          SMTP_AUTH_USER: ${{secrets.SMTP_AUTH_USER}}
+          SMTP_AUTH_PASS: ${{secrets.SMTP_AUTH_PASS}}
+          SMTP_EMAIL: hello@ichinglab.com
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+
+      - name: Deploy Files to Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          rm: true
+          source: './' # This will send all files, including the build directory
+          target: '/home/insafbook/cs-api-prod/' # This will send all files, including the build directory
+          strip_components: 0
+
+  deploy-cs-api-to-production:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy api to DigitalOcean Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/insafbook/cs-api-prod/
+            echo "calling shutdown endpoint..."
+            docker stop cs-api-prod || true
+            docker rm cs-api-prod || true
+
+            echo "Building the image..."
+            docker build -t cs-api-prod:local .
+
+            echo "starting server instance..."
+            docker run -e NODE_ENV=production -d \
+              --restart always \
+              -dit --name cs-api-prod --network insafbook_net1 \
+              -p 0.0.0.0:3007:3007 \
+              -v /home/insafbook/cs-api-prod/dist:/app/dist \
+              cs-api-prod:local
+
+            docker builder prune -f
+            docker image prune -f
+            echo "Deploy Done...."
