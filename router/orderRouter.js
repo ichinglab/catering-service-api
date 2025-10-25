@@ -4,6 +4,7 @@ import {
   deleteOrder,
   getAllOrders,
   getOrderById,
+  getUserOrders,
   updateOrder,
 } from '../controler/orderControler.js';
 import tokenVeryfiy from '../middleware/tokenVerify.js';
@@ -15,5 +16,6 @@ router.get('/api/v1/order', getAllOrders);
 router.delete('/api/v1/order/:id', tokenVeryfiy, deleteOrder);
 router.patch('/api/v1/order/:id', tokenVeryfiy, updateOrder);
 router.get('/api/v1/order/:id', getOrderById);
+router.get('/api/v1/customer-orders/:id', getUserOrders);
 
 export default router;

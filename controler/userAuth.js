@@ -203,10 +203,10 @@ export const getUser = asyncHandler(async (req, res) => {
 // });
 
 export const loingUser = asyncHandler(async (req, res) => {
-  const { auth, password } = req.body;
+  const { email, password } = req.body;
 
   // input validation
-  if (!auth || !password) {
+  if (!email || !password) {
     return res
       .status(400)
       .json({ status: false, message: 'All fields are required' });
@@ -214,10 +214,8 @@ export const loingUser = asyncHandler(async (req, res) => {
 
   // try to find user
   let loginUser = null;
-  if (isEmail(auth)) {
-    loginUser = await prisma.user.findFirst({ where: { email: auth } });
-  } else if (isMobile(auth)) {
-    loginUser = await prisma.user.findFirst({ where: { phone: auth } });
+  if (isEmail(email)) {
+    loginUser = await prisma.user.findUnique({ where: { email: email } });
   }
 
   // if no user or wrong password → unauthorized
@@ -298,7 +296,8 @@ export const loggedinUser = asyncHandler(async (req, res) => {
  * @access private
  */
 export const updateUser = asyncHandler(async (req, res) => {
-  const { id, first_name, last_name, phone, dob, gender, address } = req.body;
+  const { id, first_name, last_name, phone, dob, gender, address, image } =
+    req.body;
 
   if (!first_name) {
     return res.status(400).json({ message: 'first name are requried!' });
@@ -313,6 +312,7 @@ export const updateUser = asyncHandler(async (req, res) => {
       dob,
       gender,
       address,
+      image,
     },
   });
   if (!updatedUser) {
@@ -324,4 +324,20 @@ export const updateUser = asyncHandler(async (req, res) => {
     status: true,
     user: updatedUser,
   });
+});
+
+/**
+ * @description  get single user
+ * @route /api/v1/user/:id
+ * @method patch
+ * @access private
+ */
+
+export const getSingleUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const user = await prisma.user.findUnique({ where: { id: id } });
+  if (!user) {
+    return res.status(400).json({ message: 'User not found' });
+  }
+  res.status(200).json({ user, status: true, message: 'User found' });
 });
