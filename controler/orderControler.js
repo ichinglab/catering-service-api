@@ -11,6 +11,7 @@ export const createOrder = async (req, res) => {
   try {
     const { products } = req.body;
     const id = req.me.id;
+    console.log('data', req.me.id);
     if (!req.me) {
       return res.status(401).json({
         status: false,
@@ -107,12 +108,6 @@ export const createOrder = async (req, res) => {
  */
 export const getAllOrders = async (req, res) => {
   try {
-    if (!req.me) {
-      return res.status(401).json({
-        status: false,
-        message: 'Unauthorized',
-      });
-    }
     const orders = await prisma.order.findMany({
       include: {
         user: {
@@ -336,4 +331,37 @@ export const getOrderById = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+/**
+ * @description  Get order for customer
+ * @method GET
+ * @route /api/v1/customer-order
+ * @access private
+ */
+// ✅ Example: Get orders for a single user
+export const getUserOrders = async (req, res) => {
+  const { id: userId } = req.params;
+  const orders = await prisma.order.findMany({
+    where: { userId },
+    include: {
+      user: {
+        select: { id: true, first_name: true, email: true, phone: true },
+      },
+      orderItems: {
+        include: {
+          product: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  res.status(200).json({
+    status: true,
+    total: orders.length,
+    data: orders,
+  });
 };

@@ -156,33 +156,91 @@ export const getUser = asyncHandler(async (req, res) => {
  * @access public
  */
 
+// export const loingUser = asyncHandler(async (req, res) => {
+//   const { auth, password } = req.body;
+
+//   // input validation
+//   if (!auth || !password) {
+//     return res
+//       .status(400)
+//       .json({ status: true, message: 'All fields are required' });
+//   }
+
+//   // try to find user
+//   let loginUser = null;
+//   if (isEmail(auth)) {
+//     loginUser = await prisma.user.findFirst({ where: { email: auth } });
+//   } else if (isMobile(auth)) {
+//     loginUser = await prisma.user.findFirst({ where: { phone: auth } });
+//   }
+
+//   // if no user or wrong password → always unauthorized
+//   if (!loginUser || !bcrypt.compareSync(password, loginUser.password)) {
+//     return res.status(401).json({ message: 'Unauthorized' });
+//   }
+
+//   // create login token
+//   const accessToken = jwt.sign({ auth: auth }, process.env.USER_LOGIN_SECRET, {
+//     expiresIn: '7d',
+//   });
+
+//   // set cookie
+//   res.cookie('accessToken', accessToken, {
+//     httpOnly: true,
+//     secure: process.env.APP_ENV === 'Development' ? false : true,
+//     sameSite: 'strict',
+//     path: '/',
+//     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+//   });
+
+//   // success response
+//   res.status(200).json({
+//     loginUser,
+//     status: true,
+//     accessToken,
+//     message: 'Login successful',
+//   });
+// });
+
 export const loingUser = asyncHandler(async (req, res) => {
-  const { auth, password } = req.body;
+  const { email, password } = req.body;
 
   // input validation
-  if (!auth || !password) {
+  if (!email || !password) {
     return res
       .status(400)
-      .json({ status: true, message: 'All fields are required' });
+      .json({ status: false, message: 'All fields are required' });
   }
 
   // try to find user
   let loginUser = null;
-  if (isEmail(auth)) {
-    loginUser = await prisma.user.findFirst({ where: { email: auth } });
-  } else if (isMobile(auth)) {
-    loginUser = await prisma.user.findFirst({ where: { phone: auth } });
+  if (isEmail(email)) {
+    loginUser = await prisma.user.findUnique({ where: { email: email } });
   }
 
-  // if no user or wrong password → always unauthorized
+  // if no user or wrong password → unauthorized
   if (!loginUser || !bcrypt.compareSync(password, loginUser.password)) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  // create login token
-  const accessToken = jwt.sign({ auth: auth }, process.env.USER_LOGIN_SECRET, {
-    expiresIn: '7d',
-  });
+  // ✅ create login token with user details
+  const accessToken = jwt.sign(
+    {
+      id: loginUser.id,
+      first_name: loginUser.first_name,
+      last_name: loginUser.last_name,
+      phone: loginUser.phone,
+      email: loginUser.email,
+      image: loginUser.image,
+      dob: loginUser.dob,
+      gender: loginUser.gender,
+      address: loginUser.address,
+      role: loginUser.role,
+      createdAt: loginUser.createdAt,
+    },
+    process.env.USER_LOGIN_SECRET,
+    { expiresIn: '7d' }
+  );
 
   // set cookie
   res.cookie('accessToken', accessToken, {
@@ -195,10 +253,10 @@ export const loingUser = asyncHandler(async (req, res) => {
 
   // success response
   res.status(200).json({
-    loginUser,
     status: true,
-    accessToken,
     message: 'Login successful',
+    loginUser,
+    accessToken,
   });
 });
 
@@ -229,4 +287,57 @@ export const loggedinUser = asyncHandler(async (req, res) => {
   res
     .status(200)
     .json({ auth: req.me, status: true, message: 'Loggedin user found' });
+});
+
+/**
+ * @description  Update User
+ * @route /api/v1/user/:id
+ * @method patch
+ * @access private
+ */
+export const updateUser = asyncHandler(async (req, res) => {
+  const { id, first_name, last_name, phone, dob, gender, address, image } =
+    req.body;
+
+  if (!first_name) {
+    return res.status(400).json({ message: 'first name are requried!' });
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: { id: id },
+    data: {
+      first_name,
+      last_name,
+      phone,
+      dob,
+      gender,
+      address,
+      image,
+    },
+  });
+  if (!updatedUser) {
+    return res.status(400).json({ message: 'User not found' });
+  }
+
+  res.status(200).json({
+    message: 'Update successful',
+    status: true,
+    user: updatedUser,
+  });
+});
+
+/**
+ * @description  get single user
+ * @route /api/v1/user/:id
+ * @method patch
+ * @access private
+ */
+
+export const getSingleUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const user = await prisma.user.findUnique({ where: { id: id } });
+  if (!user) {
+    return res.status(400).json({ message: 'User not found' });
+  }
+  res.status(200).json({ user, status: true, message: 'User found' });
 });

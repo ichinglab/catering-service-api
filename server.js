@@ -9,7 +9,6 @@ import orderRouter from './router/orderRouter.js';
 import serviceRouter from './router/ourServiceRouter.js';
 import productRouter from './router/productRouter.js';
 import authRouter from './router/userAuth.js';
-import userRouter from './router/userRouter.js';
 //dotenv config
 dotenv.config();
 
@@ -33,7 +32,6 @@ app.use(
   })
 );
 //Router
-app.use(userRouter);
 app.use(authRouter);
 app.use(productRouter);
 app.use(categoryRouter);

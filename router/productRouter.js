@@ -15,6 +15,6 @@ router.post('/api/v1/product', tokenVeryfiy, createProduct);
 router.get('/api/v1/product', getAllProducts);
 router.get('/api/v1/product/:id', getSingleProduct);
 router.delete('/api/v1/product/:id', tokenVeryfiy, deleteProduct);
-router.put('/api/v1/product/:id', tokenVeryfiy, updateProduct);
+router.patch('/api/v1/product/:id', tokenVeryfiy, updateProduct);
 
 export default router;
