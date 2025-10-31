@@ -13,7 +13,7 @@ const router = express.Router();
 //all student routers
 router.post('/api/v1/product', tokenVeryfiy, createProduct);
 router.get('/api/v1/product', getAllProducts);
-router.get('/api/v1/product/:id', getSingleProduct);
+router.get('/api/v1/product/:id', tokenVeryfiy, getSingleProduct);
 router.delete('/api/v1/product/:id', tokenVeryfiy, deleteProduct);
 router.patch('/api/v1/product/:id', tokenVeryfiy, updateProduct);
 
