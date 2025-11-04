@@ -12,37 +12,29 @@ import { isEmail, isMobile } from '../helper/Helper.js';
  */
 
 export const userRegister = asyncHandler(async (req, res) => {
-  const { first_name, last_name, auth, address, password } = req.body;
+  const { first_name, last_name, email, phone, address, password } = req.body;
 
-  if (!first_name || !auth || !password) {
+  if (!first_name || !email || !password) {
     return res.status(400).json({ message: 'all fields are required' });
   }
 
-  let authEmail = null;
-  let authPhone = null;
-
-  if (isEmail(auth)) {
-    authEmail = auth;
-
+  if (isEmail(email)) {
     const checkEmail = await prisma.user.findFirst({
-      where: { email: authEmail },
+      where: { email },
     });
 
     if (checkEmail) {
-      return res.status(400).json({ message: 'email already exists' });
+      return res.status(400).json({ message: 'This email already exists' });
     }
-  } else if (isMobile(auth)) {
-    authPhone = auth;
-
-    const checkPhone = await prisma.user.findFirst({
-      where: { phone: authPhone },
+  }
+  if (isMobile(phone)) {
+    const checkEmail = await prisma.user.findFirst({
+      where: { phone },
     });
 
-    if (checkPhone) {
-      return res.status(400).json({ message: 'Phone already exists' });
+    if (checkEmail) {
+      return res.status(400).json({ message: 'This phone already exists' });
     }
-  } else {
-    return res.status(400).json({ message: 'Invalid email or phone format' });
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
@@ -51,27 +43,15 @@ export const userRegister = asyncHandler(async (req, res) => {
     data: {
       first_name,
       last_name,
-      email: authEmail,
-      phone: authPhone,
+      email,
+      phone,
       address,
       password: hashPassword,
     },
   });
 
-  if (user) {
-    const activationToken = jwt.sign(
-      { auth },
-      process.env.ACCOUNT_ACTIVAION_SECRET,
-      { expiresIn: '500min' }
-    );
-
-    // res.cookie('activationToken', activationToken);
-
-    // if (authEmail) {
-    //   await AccountActivationEmail(auth, { code: otp, link: '' });
-    // } else if (authPhone) {
-    //   await sendSMS(auth, `Hello ${name} your activation OTP is ${otp}`);
-    // }
+  if (!user) {
+    return res.status(400).json({ message: 'User not created' });
   }
 
   res.status(201).json({ user, status: true, message: 'Register successful' });
