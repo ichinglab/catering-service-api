@@ -6,11 +6,12 @@ import prisma from '../config/prismaClient.js';
  * @access public
  */
 export const createCategory = async (req, res) => {
-  const { name } = req.body;
+  const { name, photo } = req.body;
   try {
     const category = await prisma.category.create({
       data: {
         name,
+        photo,
       },
     });
     res.status(201).json({
