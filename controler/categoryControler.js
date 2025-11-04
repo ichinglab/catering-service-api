@@ -86,11 +86,11 @@ export const deleteCategory = async (req, res) => {
  */
 export const updateCategory = async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const { name, photo } = req.body;
   try {
     const updatedCategory = await prisma.Category.update({
       where: { id },
-      data: { name },
+      data: { name, photo },
     });
     res.status(200).json({
       updatedCategory,
