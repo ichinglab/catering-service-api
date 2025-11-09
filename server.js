@@ -6,6 +6,7 @@ import express from 'express';
 import errorHandler from './middleware/errorHandler.js';
 import breakfast from './router/brackfastRouter.js';
 import categoryRouter from './router/categoryRouter.js';
+import cuztomFoodRouter from './router/custFoodRouter.js';
 import dinner from './router/dinnerRouter.js';
 import lunch from './router/lunchRouter.js';
 import orderRouter from './router/orderRouter.js';
@@ -43,6 +44,7 @@ app.use(serviceRouter);
 app.use(breakfast);
 app.use(lunch);
 app.use(dinner);
+app.use(cuztomFoodRouter);
 
 //errorHandler
 app.use(errorHandler);

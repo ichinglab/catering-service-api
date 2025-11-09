@@ -1,18 +1,18 @@
 import express from 'express';
 
-import tokenVeryfiy from '../middleware/tokenVerify.js';
 import {
   createLunch,
   deleteLunch,
   getAllLunchs,
   updateLunch,
 } from '../controler/lunchController.js';
+import tokenVeryfiy from '../middleware/tokenVerify.js';
 
 const router = express.Router();
 
 router.post('/api/v1/lunch', tokenVeryfiy, createLunch);
 
-router.get('/api/v1/lunch', tokenVeryfiy, getAllLunchs);
+router.get('/api/v1/lunch', getAllLunchs);
 
 router.delete('/api/v1/lunch/:id', tokenVeryfiy, deleteLunch);
 

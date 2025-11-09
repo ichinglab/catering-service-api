@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post('/api/v1/dinner', tokenVeryfiy, createDinner);
 
-router.get('/api/v1/dinners', tokenVeryfiy, getAllDinners);
+router.get('/api/v1/dinners', getAllDinners);
 
 router.delete('/api/v1/dinner/:id', tokenVeryfiy, deleteDinner);
 

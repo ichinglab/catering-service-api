@@ -170,6 +170,7 @@ model Dinner {
 
 model MealPackage {
   id              String     @id @default(uuid())
+  userId          String?
   mealType        String?
   packageDuration String?
   items           Json
