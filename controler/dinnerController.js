@@ -1,87 +1,87 @@
 import prisma from '../config/prismaClient.js';
 
-//create brackfast
-export const createBrackfast = async (req, res) => {
+//create dinner
+export const createDinner = async (req, res) => {
   const { title, price } = req.body;
   try {
-    const brackfast = await prisma.breackfast.create({
+    const dinner = await prisma.dinner.create({
       data: {
         title,
         price,
       },
     });
     res.status(201).json({
-      brackfast,
+      dinner,
       status: true,
-      message: 'brackfast created successfully done',
+      message: 'dinner created successfully done',
     });
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: 'Failed to create brackfast',
+      message: 'Failed to create dinner',
       error: error.message,
     });
   }
 };
 
-//get all brackfasts
-export const getAllBrackfasts = async (req, res) => {
+//get all dinners
+export const getAlldinners = async (req, res) => {
   try {
-    const brackfasts = await prisma.breackfast.findMany({
+    const dinners = await prisma.dinner.findMany({
       orderBy: { updatedAt: 'desc' },
     });
     res.status(200).json({
-      brackfasts,
+      dinners,
       status: true,
-      message: 'brackfasts retrieved successfully',
+      message: 'dinners retrieved successfully',
     });
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: 'Failed to retrieve brackfasts',
+      message: 'Failed to retrieve dinners',
       error: error.message,
     });
   }
 };
 
-//delete brackfast by id
-export const deleteBrackfast = async (req, res) => {
+//delete dinner by id
+export const deletedinner = async (req, res) => {
   const { id } = req.params;
   try {
-    await prisma.breackfast.delete({
+    await prisma.dinner.delete({
       where: { id },
     });
     res.status(200).json({
       status: true,
-      message: 'brackfast deleted successfully',
+      message: 'dinner deleted successfully',
     });
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: 'Failed to delete brackfast',
+      message: 'Failed to delete dinner',
       error: error.message,
     });
   }
 };
 
-//update brackfast by id
-export const updateBrackfast = async (req, res) => {
+//update dinner by id
+export const updatedinner = async (req, res) => {
   const { id } = req.params;
   const { title, price } = req.body;
   try {
-    const updatedBrackfast = await prisma.breackfast.update({
+    const updateddinner = await prisma.dinner.update({
       where: { id },
       data: { title, price },
     });
     res.status(200).json({
-      updatedBrackfast,
+      updateddinner,
       status: true,
-      message: 'brackfast updated successfully',
+      message: 'dinner updated successfully',
     });
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: 'Failed to update brackfast',
+      message: 'Failed to update dinner',
       error: error.message,
     });
   }
