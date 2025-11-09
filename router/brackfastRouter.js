@@ -10,12 +10,12 @@ import tokenVeryfiy from '../middleware/tokenVerify.js';
 
 const router = express.Router();
 
-router.post('/api/v1/brackfast', tokenVeryfiy, createBrackfast);
+router.post('/api/v1/breakfast', tokenVeryfiy, createBrackfast);
 
-router.get('/api/v1/brackfast', tokenVeryfiy, getAllBrackfasts);
+router.get('/api/v1/breakfast', tokenVeryfiy, getAllBrackfasts);
 
-router.delete('/api/v1/brackfast/:id', tokenVeryfiy, deleteBrackfast);
+router.delete('/api/v1/breakfast/:id', tokenVeryfiy, deleteBrackfast);
 
-router.patch('/api/v1/brackfast/:id', tokenVeryfiy, updateBrackfast);
+router.patch('/api/v1/breakfast/:id', tokenVeryfiy, updateBrackfast);
 
 export default router;

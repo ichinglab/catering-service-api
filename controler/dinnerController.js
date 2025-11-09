@@ -25,7 +25,7 @@ export const createDinner = async (req, res) => {
 };
 
 //get all dinners
-export const getAlldinners = async (req, res) => {
+export const getAllDinners = async (req, res) => {
   try {
     const dinners = await prisma.dinner.findMany({
       orderBy: { updatedAt: 'desc' },
@@ -45,7 +45,7 @@ export const getAlldinners = async (req, res) => {
 };
 
 //delete dinner by id
-export const deletedinner = async (req, res) => {
+export const deleteDinner = async (req, res) => {
   const { id } = req.params;
   try {
     await prisma.dinner.delete({
@@ -65,7 +65,7 @@ export const deletedinner = async (req, res) => {
 };
 
 //update dinner by id
-export const updatedinner = async (req, res) => {
+export const updateDinner = async (req, res) => {
   const { id } = req.params;
   const { title, price } = req.body;
   try {

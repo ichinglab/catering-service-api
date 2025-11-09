@@ -168,6 +168,15 @@ model Dinner {
 
 }
 
+model MealPackage {
+  id              String     @id @default(uuid())
+  mealType        String?
+  packageDuration String?
+  items           Json
+  totalPrice      Int?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
 
 enum Gender {
   MALE
