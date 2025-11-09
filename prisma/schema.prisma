@@ -85,6 +85,9 @@ model categoryProduct {
   category Category @relation(fields: [categoryId], references: [id])
   product  Product  @relation(fields: [productId], references: [id])
 
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
   @@unique([categoryId, productId])
   @@map("categoryProducts")
 }
@@ -119,6 +122,9 @@ model OrderProduct {
   order   Order   @relation(fields: [orderId], references: [id])
   product Product @relation(fields: [productId], references: [id])
 
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
   @@map("order_products")
 }
 
@@ -131,6 +137,37 @@ model Service {
 
   @@map("Services")
 }
+
+model Breackfast {
+  id          String  @id @default(uuid())
+  title       String?
+  price       Int?
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+}
+
+model Lunch {
+  id          String  @id @default(uuid())
+  title       String?
+  price       Int?
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+}
+
+model Dinner {
+  id          String  @id @default(uuid())
+  title       String?
+  price       Int?
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+}
+
 
 enum Gender {
   MALE

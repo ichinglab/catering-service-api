@@ -65,54 +65,6 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// export const createProduct = async (req, res) => {
-//   const {
-//     title,
-//     description,
-//     price,
-//     discount,
-//     sku,
-//     photo,
-//     address,
-//     duration,
-//     timeSlots,
-//     categoryIds,
-//   } = req.body;
-
-//   // Calculate total price
-//   const total_price = price - (price * discount) / 100;
-
-//   const product = await prisma.product.create({
-//     data: {
-//       sku,
-//       title,
-//       description,
-//       base_price: price,
-//       discount,
-//       total_price,
-//       product_photo: photo,
-//       address,
-//       duration,
-//       timeSlots,
-//       categories: {
-//         create: categoryIds.map(categoryId => ({
-//           category: { connect: { id: categoryId } },
-//         })),
-//       },
-//     },
-//     include: {
-//       categories: { include: { category: true } },
-//     },
-//   });
-
-//   res.status(201).json({
-//     success: true,
-//     message: 'Product created successfully',
-//     data: product,
-//   });
-// };
-
-export default createProduct;
 /**
  * @description   get all Products
  * @method GET
