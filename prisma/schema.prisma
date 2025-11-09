@@ -145,7 +145,7 @@ model Breackfast {
 
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-
+ @@map("breackfasts")
 }
 
 model Lunch {

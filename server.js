@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import errorHandler from './middleware/errorHandler.js';
+import breakfast from './router/brackfastRouter.js';
 import categoryRouter from './router/categoryRouter.js';
 import orderRouter from './router/orderRouter.js';
 import serviceRouter from './router/ourServiceRouter.js';
@@ -37,6 +38,7 @@ app.use(productRouter);
 app.use(categoryRouter);
 app.use(orderRouter);
 app.use(serviceRouter);
+app.use(breakfast);
 
 //errorHandler
 app.use(errorHandler);
