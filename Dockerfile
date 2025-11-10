@@ -9,4 +9,5 @@ RUN npm install
 
 EXPOSE 3007
 
-CMD ["npm", "start"]
+RUN chmod +x entrypoint.sh
+CMD ["sh", "./entrypoint.sh"]
