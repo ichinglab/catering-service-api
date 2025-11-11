@@ -18,6 +18,8 @@ jobs:
           APP_ENV: production
           PORT: 3007
           DATABASE_URL: postgresql://${{secrets.POSTGRES_PROD_USER}}:${{secrets.POSTGRES_PROD_PASS}}@postgres:5432/production-catering_service_db
+          USER_LOGIN_SECRET: ${{secrets.USER_LOGIN_SECRET}}
+
 
           #SMTP
           SMTP_HOST: smtp-relay.brevo.com
