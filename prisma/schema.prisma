@@ -85,8 +85,8 @@ model categoryProduct {
   category Category @relation(fields: [categoryId], references: [id])
   product  Product  @relation(fields: [productId], references: [id])
 
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([categoryId, productId])
   @@map("categoryProducts")
@@ -122,8 +122,8 @@ model OrderProduct {
   order   Order   @relation(fields: [orderId], references: [id])
   product Product @relation(fields: [productId], references: [id])
 
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("order_products")
 }
@@ -139,44 +139,44 @@ model Service {
 }
 
 model Breackfast {
-  id          String  @id @default(uuid())
-  title       String?
-  price       Int?
+  id    String  @id @default(uuid())
+  title String?
+  price Int?
 
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
- @@map("breackfasts")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("breackfasts")
 }
 
 model Lunch {
-  id          String  @id @default(uuid())
-  title       String?
-  price       Int?
+  id    String  @id @default(uuid())
+  title String?
+  price Int?
 
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Dinner {
-  id          String  @id @default(uuid())
-  title       String?
-  price       Int?
+  id    String  @id @default(uuid())
+  title String?
+  price Int?
 
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model MealPackage {
-  id              String     @id @default(uuid())
+  id              String         @id @default(uuid())
   userId          String?
   mealType        String?
+  payment_status  payment_status @default(UNPAID)
   packageDuration String?
   items           Json
   totalPrice      Int?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 }
 
 enum Gender {

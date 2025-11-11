@@ -9,13 +9,6 @@ export const createMealPackage = async (req, res) => {
   try {
     const { mealType, userId, packageDuration, items } = req.body;
 
-    if (!mealType || !packageDuration || !items?.length) {
-      return res.status(400).json({
-        status: false,
-        message: 'mealType, packageDuration, and items are required',
-      });
-    }
-
     // Calculate total price
     const totalPrice = items.reduce(
       (sum, item) => sum + (item.price || 0) * (item.qty || 1),
@@ -71,6 +64,27 @@ export const getAllMealPackages = async (req, res) => {
   }
 };
 
+export const getCustomizedFoodByUserId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const mealPackage = await prisma.mealPackage.findMany({
+      where: { userId: id },
+    });
+    res.status(200).json({
+      status: true,
+      message: 'Meal package retrieved successfully',
+      data: mealPackage,
+    });
+  } catch (error) {
+    console.error('Error retrieving meal package:', error);
+    res.status(500).json({
+      status: false,
+      message: 'Server error while retrieving meal package',
+      error: error.message,
+    });
+  }
+};
+
 /**
  * @desc   Update by id
  * @route  POST /api/v1/meal-package
@@ -80,28 +94,12 @@ export const getAllMealPackages = async (req, res) => {
 export const updateMealPackage = async (req, res) => {
   try {
     const { id } = req.params;
-    const { mealType, packageDuration, items } = req.body;
-
-    if (!mealType || !packageDuration || !items?.length) {
-      return res.status(400).json({
-        status: false,
-        message: 'mealType, packageDuration, and items are required',
-      });
-    }
-
-    // Calculate total price
-    const totalPrice = items.reduce(
-      (sum, item) => sum + (item.price || 0) * (item.qty || 1),
-      0
-    );
+    const { payment_status } = req.body;
 
     const updatedPackage = await prisma.mealPackage.update({
       where: { id },
       data: {
-        mealType,
-        packageDuration,
-        items,
-        totalPrice,
+        payment_status,
       },
     });
 

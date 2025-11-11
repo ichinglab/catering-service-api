@@ -11,7 +11,7 @@ export const createOrder = async (req, res) => {
   try {
     const { products } = req.body;
     const id = req.me.id;
-    console.log('data', req.me.id);
+
     if (!req.me) {
       return res.status(401).json({
         status: false,
