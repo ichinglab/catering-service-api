@@ -1,18 +1,18 @@
-import nodemailer from "nodemailer";
+import nodemailer from 'nodemailer';
 
 export const AccountActivationEmail = async (email, data) => {
   // send email
   const transport = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: 'smtp.gmail.com',
     port: 587,
     auth: {
-      user: "mdjohurulislam555@gmail.com",
-      pass: "nzbo hzuz syll nfot",
+      user: 'example@gmail.com',
+      pass: 'sdfs sdfg ghjk vbnm',
     },
   });
   await transport.sendMail({
-    from: "Blood Donation <mdjohurulislam555@gmail.com>",
-    subject: "Activate",
+    from: 'Blood Donation <example@gmail.com>',
+    subject: 'Activate',
     to: email,
     html: `
 
@@ -234,7 +234,7 @@ export const AccountActivationEmail = async (email, data) => {
 </table><!-- End -->
 </body>
 </html>
-    
+
     `,
   });
 };
